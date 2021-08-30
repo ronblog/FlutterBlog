@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'playmodel.dart';
 import 'moveitem.dart';
+import 'playerwidget.dart';
 import 'nonomoveitem.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'traditionpainter.dart';
 
 
 import 'package:flutter_tts/flutter_tts.dart';
 enum TtsState { playing, stopped, paused, continued }
-class Play2FaceView extends StatefulWidget {
+class TraditionView extends StatefulWidget {
   @override
-  _Play2FaceViewState createState() => _Play2FaceViewState();
+  _TraditionViewState createState() => _TraditionViewState();
 }
 
-class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveClientMixin{ //with AutomaticKeepAliveClientMixin
+class _TraditionViewState extends State<TraditionView> with AutomaticKeepAliveClientMixin{ //with AutomaticKeepAliveClientMixin
 
+  List<NoeMoveableStackItem> ltNone = [];
 
 
   final List<int> colorCodes = <int>[600, 500, 100];
@@ -44,10 +47,6 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
   List<Widget> ltMoves = [Container(
     height: 1500,
   )];
-
-  List<MoveableStackItem> movableItems = [];
-  List<NoeMoveableStackItem> noneMovableItems = [];
-
   List<DropdownMenuItem<String>> getEnginesDropDownMenuItems(dynamic engines) {
     var items = <DropdownMenuItem<String>>[];
     for (dynamic type in engines) {
@@ -79,15 +78,25 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
   @override
   initState() {
     super.initState();
-    initTts();
+
+    ltMoves.add( Container(
+        width: 500,
+        height: 1000,
+        child:CustomPaint(
+          size: Size.infinite, //2
+          painter: traditionPainter( ), //3
+        )));
+
+
 
     for (int n=0; n< 18; n++)
     {
-      var item = NoeMoveableStackItem("player",750,30+ 55.0*n );
-      noneMovableItems.add(item);
+      var item = NoeMoveableStackItem("player",15,30+55.0*n);
+      ltNone.add(item);
       ltMoves.add(item );
     }
 
+    initTts();
   }
 
 
@@ -249,35 +258,15 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
 
     //ltMoves.add( List<MoveableStackItem>.generate(roles.length, (index) => MoveableStackItem(roles[index],500,110+35.0*index)));
 
-    ltMoves.clear();
-   // movableItems.clear();
-   // noneMovableItems.clear();
-
-    ltMoves.add(Container(
-      height: 1500,
-    ));
-
-    for (int n=0; n< roles.length; n++)
-      {
-        var item = MoveableStackItem(roles[n],15,30+35.0*n);
-        movableItems.add(item);
-        ltMoves.add(item );
-      }
-    for (var item in noneMovableItems)
-      {
-        ltMoves.add(item );
-      }
-
-
     return Scaffold(
         body: Column(
           children: [
 
             Expanded(flex: 9, // 20%
-                child:   SingleChildScrollView(child:Stack(
-                  children: ltMoves,
-                ),
-                ),
+              child:   SingleChildScrollView(child:Stack(
+                children: ltMoves,
+              ),
+              ),
             ),
             Expanded(
                 flex:1, // 20%
@@ -379,20 +368,17 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
                       icon: new Icon(Icons.save),
                       highlightColor: Colors.pink,
                       onPressed: ()  {
-                        print("message - save");
+                        print("sample - save");
                         int i=0;
-                        for (var item in movableItems)
+                       // setState(()
                         {
+                          for (int n=0; n< ltNone.length; n++)
+                          {
+                            print("Heeee==");
+                           ltNone[n].reset( 15,30+55.0*n);
+                          }
+                        };
 
-                          item.reset( 15,30+55.0*i);
-                          i++;
-                        }
-                        i = 0;
-                        for (var item in noneMovableItems)
-                        {
-                          item.reset( 500,110+35.0*i);
-                          i++;
-                        }
 
                       },
                     )
@@ -406,8 +392,8 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
     );
   }
 
-@override
+  @override
 // TODO: implement wantKeepAlive
-bool get wantKeepAlive => true;
+  bool get wantKeepAlive => true;
 }
 

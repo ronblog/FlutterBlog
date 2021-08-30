@@ -4,6 +4,8 @@ import 'playmodel.dart';
 import 'moveitem.dart';
 import 'playerwidget.dart';
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 import 'package:flutter_tts/flutter_tts.dart';
@@ -13,7 +15,7 @@ class PlayNormalView extends StatefulWidget {
   _PlayNormalViewState createState() => _PlayNormalViewState();
 }
 
-class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepAliveClientMixin
+class _PlayNormalViewState extends State<PlayNormalView> with AutomaticKeepAliveClientMixin { //with AutomaticKeepAliveClientMixin
   List<Widget> movableItems = [];
 
 
@@ -30,6 +32,46 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
   double pitch = 1.0;
   double rate = 0.5;
   bool isCurrentLanguageInstalled = false;
+  TtsState ttsState = TtsState.stopped;
+
+  get isPlaying => ttsState == TtsState.playing;
+  get isStopped => ttsState == TtsState.stopped;
+  get isPaused => ttsState == TtsState.paused;
+  get isContinued => ttsState == TtsState.continued;
+
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+  bool get isWeb => kIsWeb;
+
+  List<MoveableStackItem> ltMoves = [];
+
+  List<DropdownMenuItem<String>> getEnginesDropDownMenuItems(dynamic engines) {
+    var items = <DropdownMenuItem<String>>[];
+    for (dynamic type in engines) {
+      items.add(DropdownMenuItem(
+          value: type as String?, child: Text(type as String)));
+    }
+    return items;
+  }
+  void changedEnginesDropDownItem(String? selectedEngine) {
+    flutterTts.setEngine(selectedEngine!);
+    language = null;
+    setState(() {
+      engine = selectedEngine;
+    });
+  }
+
+  Widget _enginesDropDownSection(dynamic engines) => Container(
+    padding: EdgeInsets.only(top: 50.0),
+    child: DropdownButton(
+      value: engine,
+      items: getEnginesDropDownMenuItems(engines),
+      onChanged: changedEnginesDropDownItem,
+    ),
+  );
+
+
+
 
   @override
   initState() {
@@ -37,52 +79,62 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
     initTts();
   }
 
-  initTts() async {
+
+  initTts() {
     flutterTts = FlutterTts();
 
-
-    _getDefaultEngine();
-
+    if (isAndroid) {
+      _getDefaultEngine();
+    }
 
     flutterTts.setStartHandler(() {
       setState(() {
         print("Playing");
-
+        ttsState = TtsState.playing;
       });
     });
 
     flutterTts.setCompletionHandler(() {
       setState(() {
         print("Complete");
-
+        ttsState = TtsState.stopped;
       });
     });
 
     flutterTts.setCancelHandler(() {
       setState(() {
         print("Cancel");
-
+        ttsState = TtsState.stopped;
       });
     });
 
+    if (isWeb || isIOS) {
+      flutterTts.setPauseHandler(() {
+        setState(() {
+          print("Paused");
+          ttsState = TtsState.paused;
+        });
+      });
 
+      flutterTts.setContinueHandler(() {
+        setState(() {
+          print("Continued");
+          ttsState = TtsState.continued;
+        });
+      });
+    }
 
-    flutterTts.setContinueHandler(() {
+    flutterTts.setErrorHandler((msg) {
       setState(() {
-        print("Continued");
-
+        print("error: $msg");
+        ttsState = TtsState.stopped;
       });
     });
-
-    double volume = 0.5;
-    double pitch = 1.0;
-    double rate = 0.5;
-    await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
   }
 
+  Future<dynamic> _getLanguages() => flutterTts.getLanguages;
 
+  Future<dynamic> _getEngines() => flutterTts.getEngines;
 
   Future _getDefaultEngine() async {
     var engine = await flutterTts.getDefaultEngine;
@@ -90,6 +142,84 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
       print(engine);
     }
   }
+  String? _newVoiceText;
+  Future _speak(String text) async {
+    await flutterTts.setVolume(volume);
+    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setPitch(pitch);
+
+    if (text != null) {
+      if (text.isNotEmpty) {
+        await flutterTts.awaitSpeakCompletion(true);
+        await flutterTts.speak(text);
+      }
+    }
+  }
+
+  Future _stop() async {
+    var result = await flutterTts.stop();
+    if (result == 1) setState(() => ttsState = TtsState.stopped);
+  }
+
+  Future _pause() async {
+    var result = await flutterTts.pause();
+    if (result == 1) setState(() => ttsState = TtsState.paused);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    flutterTts.stop();
+  }
+
+
+  List<DropdownMenuItem<String>> getLanguageDropDownMenuItems(
+      dynamic languages) {
+    var items = <DropdownMenuItem<String>>[];
+    for (dynamic type in languages) {
+      items.add(DropdownMenuItem(
+          value: type as String?, child: Text(type as String)));
+    }
+    return items;
+  }
+  void changedLanguageDropDownItem(String? selectedType) {
+    setState(() {
+      language = selectedType;
+      flutterTts.setLanguage(language!);
+      if (isAndroid) {
+        flutterTts
+            .isLanguageInstalled(language!)
+            .then((value) => isCurrentLanguageInstalled = (value as bool));
+      }
+    });
+  }
+  Widget _languageDropDownSection(dynamic languages) => Container(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        DropdownButton(
+          value: language,
+          items: getLanguageDropDownMenuItems(languages),
+          onChanged: changedLanguageDropDownItem,
+        ),
+        Visibility(
+          visible: isAndroid,
+          child: Text("Is installed: $isCurrentLanguageInstalled"),
+        ),
+      ]));
+  Widget _futureBuilder() => FutureBuilder<dynamic>(
+      future: _getLanguages(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          return _languageDropDownSection(snapshot.data);
+        } else if (snapshot.hasError) {
+          return Text('Error loading languages...');
+        } else
+          return Text('Loading Languages...');
+      });
+
+
+
+
 
 
 
@@ -103,6 +233,7 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
     model.addListener(() { setState(() {
 
     });});
+    ltMoves = List<MoveableStackItem>.generate(roles.length, (index) => MoveableStackItem(roles[index],500,110+35.0*index));
 
     return Scaffold(
         body: Column(
@@ -114,13 +245,27 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
                    flex: 2, // 20%
                    child:ListView.separated(
                      padding: const EdgeInsets.all(8),
-                     itemCount: roles.length,
+                     itemCount: 18,
                      itemBuilder: (BuildContext context, int index) {
                        return Container(
                          height: 50,
                          color: Colors.amber[50],
                          //child: Center(child: PlayerWidget( "${players[index]}")),
-                         child:  Text("${players[index]}", style:TextStyle(color: Colors.blue.withOpacity(1.0),fontSize: 20),textAlign: TextAlign.center,),
+                         child: TextField(
+                           enabled: true,
+                           controller: TextEditingController()..text = "player " +index.toString(),
+
+                           //initialValue: index<_nKiller? "I am smart": (index<_nKiller+_nGod?"dd":"ddeee"),
+                           decoration: InputDecoration(
+                             //hintText: ps[index],
+                             //labelText:"Name",
+                           ),
+                           onChanged: (String? value) {
+
+                             // This optional block of code can be used to run
+                             // code when the user saves the form.
+                           },
+                         )
                        );
                      },
                      separatorBuilder: (BuildContext context, int index) => const Divider(),
@@ -130,7 +275,7 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
                Expanded(
                  flex:8, // 20%
                  child: Stack(
-                   children: List<MoveableStackItem>.generate(roles.length, (index) => MoveableStackItem(roles[index],500,110+35.0*index)),
+                   children: ltMoves,
                  ),
                ),
 
@@ -158,9 +303,9 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
                       highlightColor: Colors.pink,
                       onPressed: () async { print("message");
                         //-----------------------
-                      await flutterTts.awaitSpeakCompletion(true);
 
-                      await flutterTts.speak("天黑请闭眼。");
+
+                       _speak("天黑请闭眼。");
                         //------------------------------
                       },
                     ),
@@ -234,6 +379,20 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
                           await flutterTts.speak("女巫请闭眼。");
                       },
                     ),
+                    _futureBuilder(),
+                    IconButton(
+                      icon: new Icon(Icons.save),
+                      highlightColor: Colors.pink,
+                      onPressed: ()  {
+                        print("message - save");
+                        int i=0;
+                        for (var item in ltMoves)
+                          {
+                            item.reset( 500,110+35.0*i++);
+                          }
+
+                      },
+                    )
                   ],
                 )
             ),
@@ -244,8 +403,8 @@ class _PlayNormalViewState extends State<PlayNormalView> { //with AutomaticKeepA
     );
   }
 
-  //@override
+  @override
   // TODO: implement wantKeepAlive
-  //bool get wantKeepAlive => true;
+  bool get wantKeepAlive => true;
 }
 

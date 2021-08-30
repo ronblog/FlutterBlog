@@ -8,11 +8,24 @@ class MoveableStackItem extends StatefulWidget {
     roleName = name;
     print("Create '$name'");
   }
+
+  void reset(double x, double y)
+  {
+    _state.reset(x, y);
+  }
+
   double xPosition = 0;
   double yPosition = 0;
   String roleName = "";
   @override
-  _MoveableStackItemState createState() => _MoveableStackItemState(xPosition,yPosition);
+  _MoveableStackItemState createState() {
+   // _state = _MoveableStackItemState(xPosition, yPosition);
+    _state.reset111(xPosition, yPosition);
+    return _state;
+  }
+
+    _MoveableStackItemState _state = _MoveableStackItemState(0, 0);
+
 }
 
 class _MoveableStackItemState extends State<MoveableStackItem> {
@@ -20,6 +33,26 @@ class _MoveableStackItemState extends State<MoveableStackItem> {
   double yPosition = 0;
   Color color = Colors.orange;
   List<bool> _selections = List.generate(2, (_) => false);
+
+  void reset111(double x, double y)
+  {
+   {
+      _selections[0] = false;
+      _selections[1] = false;
+      xPosition = x;
+      yPosition = y;
+    };
+  }
+
+  void reset(double x, double y)
+  {
+    setState(() {
+      _selections[0] = false;
+      _selections[1] = false;
+      xPosition = x;
+      yPosition = y;
+    });
+  }
 
   _MoveableStackItemState(double x, double y)
   {
@@ -49,15 +82,17 @@ class _MoveableStackItemState extends State<MoveableStackItem> {
             width: 200,
             height: 30,
           padding: const EdgeInsets.all(3.0),
-            color: Colors.brown[400],
+            color: Colors.deepOrange[100],
             child: Row(
               children: [
                 Text(widget.roleName, style:TextStyle(color: Colors.blue.withOpacity(1.0),fontSize: 20),textAlign: TextAlign.center,),
                 Spacer(), //make space between text and buttons;
 
                 ToggleButtons(
+                  selectedColor: Colors.deepPurpleAccent,
+                  fillColor: Colors.blue,
                   children: <Widget>[
-                    Icon(Icons.cancel,color: Colors.red[200] ),
+                    Icon(Icons.cancel,color: Colors.blue[200] ),
                     Icon(Icons.bloodtype_sharp,color: Colors.red[200],),
                     // Icon(Icons.add_location),
                   ],

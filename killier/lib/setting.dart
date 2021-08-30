@@ -182,6 +182,7 @@ class _SettingViewState extends State<SettingView>
                 onPressed: () async {
                   print("message - save");
                   //-----------------------
+                  rs.clear();
                   Provider.of<PlayModel>(context, listen: false).playerList =
                       ps;
                   Provider.of<PlayModel>(context, listen: false).roleList = rs;
