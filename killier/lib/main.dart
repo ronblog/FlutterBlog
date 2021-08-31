@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 //test 2222-------------
+=======
+//test ---1
+>>>>>>> e89dff278dfbf1a3a3eaf633d28da9bd32213703
 import 'normal.dart';
 import 'playview_normal.dart';
 import 'playmodel.dart';
