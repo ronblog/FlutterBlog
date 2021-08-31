@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 
-<<<<<<< Updated upstream
-//Test VM windows1
-=======
-//Test - my window1
->>>>>>> Stashed changes
-
 import 'normal.dart';
 import 'playview_normal.dart';
 import 'playmodel.dart';
-import 'setting.dart';
+import 'tworoleplayview.dart';
 import 'setting2.dart';
 import 'playview2face.dart';
+import 'tts.dart';
 
 import 'package:provider/provider.dart';
+import 'playview_tradition.dart';
 
 final playModel = PlayModel();
 
@@ -101,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             bottom:  TabBar(
@@ -115,6 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   text: '双身份',
                 ),
                 Tab(
+                  icon: Icon(Icons.sync),
+                  text: '双身份2',
+                ),
+                Tab(
                   icon: Icon(Icons.storage),
                   text: '设置',
                 ),
@@ -125,8 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
           body:  TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
-              PlayNormalView(),
+              //PlayNormalView(),
+              TraditionView(),
+              //MyTTS(),
               Play2FaceView(),
+              TwoRolePlayView(),
               SettingView2(),
               //MyTTS(),
               // Draggable(

@@ -5,6 +5,7 @@ import 'moveitem.dart';
 
 import 'dart:async';
 import 'nonomoveitem.dart';
+import 'towrolepainter.dart';
 
 import 'package:flutter_tts/flutter_tts.dart';
 enum TtsState { playing, stopped, paused, continued }
@@ -31,7 +32,7 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
   double rate = 0.5;
   bool isCurrentLanguageInstalled = false;
 
-  List<Widget> movableItems = [];
+  List<MoveableStackItem> movableItems = [];
   List<Widget> ltMoves = [];
 
   @override
@@ -111,10 +112,17 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
     ltMoves.add(Container(
       height: 1500,
     ));
+    ltMoves.add( Container(
+        width: 500,
+        height: 1000,
+        child:CustomPaint(
+          size: Size.infinite, //2
+          painter: TwoRolePainter( ), //3
+        )));
 
     for (int n=0; n< roles.length; n++)
     {
-      var item = MoveableStackItem(roles[n],15,30+35.0*n);
+      var item = MoveableStackItem(roles[n],600,30+35.0*n);
       movableItems.add(item);
       ltMoves.add(item );
     }
@@ -134,13 +142,15 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
                         flex: 3, // 20%
                         child:ListView.separated(
                           padding: const EdgeInsets.all(8),
-                          itemCount: 18,
+                          itemCount: 14,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                               height: 50,
                               color: Colors.amber[50],
                               //child: Center(child: PlayerWidget( "${players[index]}")),
-                              child:  NoeMoveableStackItem("player",750,30+ 55.0*index ),
+                              child:  NoeMoveableStackItem("player",750,30+ 55.0*index
+
+                              ),
                             );
                           },
                           separatorBuilder: (BuildContext context, int index) => const Divider(),
@@ -150,7 +160,7 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
                     Expanded(
                       flex:7, // 20%
                       child: Stack(
-                        children: List<MoveableStackItem>.generate(roles.length, (index) => MoveableStackItem(roles[index],500,110+35.0*index)),
+                        children: ltMoves,
                       ),
                     ),
 
@@ -253,6 +263,22 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
                           await flutterTts.speak("女巫请闭眼。");
                       },
                     ),
+                    IconButton(
+                      icon: new Icon(Icons.save),
+                      highlightColor: Colors.pink,
+                      onPressed: ()  {
+                        print("message - save");
+                        int i=0;
+                        for (var item in movableItems)
+                        {
+                          item.reset( 600,30+45.0*i);
+                          i++;
+                        }
+                        i = 0;
+
+
+                      },
+                    )
                   ],
                 )
             ),

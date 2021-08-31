@@ -6,6 +6,7 @@ import 'nonomoveitem.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'twofacepainter.dart';
 
 
 import 'package:flutter_tts/flutter_tts.dart';
@@ -257,9 +258,17 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
       height: 1500,
     ));
 
+    ltMoves.add( Container(
+        width: 500,
+        height: 1000,
+        child:CustomPaint(
+          size: Size.infinite, //2
+          painter: TwoFacePainter( ), //3
+        )));
+
     for (int n=0; n< roles.length; n++)
       {
-        var item = MoveableStackItem(roles[n],15,30+35.0*n);
+        var item = MoveableStackItem(roles[n],15,30+80.0*n);
         movableItems.add(item);
         ltMoves.add(item );
       }
@@ -384,13 +393,14 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
                         for (var item in movableItems)
                         {
 
-                          item.reset( 15,30+55.0*i);
+                          item.reset( 15,30+80.0*i);
                           i++;
                         }
                         i = 0;
                         for (var item in noneMovableItems)
                         {
-                          item.reset( 500,110+35.0*i);
+                          print("none----");
+                          item.reset( 750,30+55.0*i);
                           i++;
                         }
 
