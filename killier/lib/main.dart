@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+<<<<<<< Updated upstream
 //Test VM windows1
+=======
+//Test - my window1
+>>>>>>> Stashed changes
 
 import 'normal.dart';
 import 'playview_normal.dart';
