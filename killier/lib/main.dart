@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'normal.dart';
-import 'playview_normal.dart';
 import 'playmodel.dart';
 import 'tworoleplayview.dart';
 import 'setting2.dart';
 import 'playview2face.dart';
-import 'tts.dart';
+
 
 import 'package:provider/provider.dart';
 import 'playview_tradition.dart';

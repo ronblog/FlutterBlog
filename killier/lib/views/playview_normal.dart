@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'playmodel.dart';
-import 'moveitem.dart';
-import 'playerwidget.dart';
+import '../playmodel.dart';
+import 'package:killier/widgets/moveitem.dart';
+
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -311,8 +311,8 @@ class _PlayNormalViewState extends State<PlayNormalView> with AutomaticKeepAlive
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
-                      color: Colors.grey,
+                      height: 30.0,
+                      color: Colors.red,
                     ),
 
                     ToggleButtons(

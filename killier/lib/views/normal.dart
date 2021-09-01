@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'moveitem.dart';
+import 'package:killier/widgets/moveitem.dart';
 class NormalView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();

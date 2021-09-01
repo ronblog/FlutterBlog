@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'playmodel.dart';
-import 'moveitem.dart';
-import 'playerwidget.dart';
-import 'nonomoveitem.dart';
+
+import 'widgets/nonomoveitem.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'traditionpainter.dart';
+import 'painter/traditionpainter.dart';
 
 
 import 'package:flutter_tts/flutter_tts.dart';
@@ -295,7 +294,7 @@ class _TraditionViewState extends State<TraditionView> with AutomaticKeepAliveCl
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
 
@@ -318,7 +317,7 @@ class _TraditionViewState extends State<TraditionView> with AutomaticKeepAliveCl
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
                     ToggleButtons(
@@ -340,7 +339,7 @@ class _TraditionViewState extends State<TraditionView> with AutomaticKeepAliveCl
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
                     ToggleButtons(

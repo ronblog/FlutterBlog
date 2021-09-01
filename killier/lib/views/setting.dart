@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'playmodel.dart';
+import '../playmodel.dart';
 import 'package:provider/provider.dart';
 
 class SettingView extends StatefulWidget {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'playmodel.dart';
-import 'moveitem.dart';
-import 'nonomoveitem.dart';
+import 'widgets/moveitem.dart';
+import 'widgets/nonomoveitem.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'twofacepainter.dart';
+import 'painter/twofacepainter.dart';
 
 
 import 'package:flutter_tts/flutter_tts.dart';
@@ -315,7 +315,7 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
 
@@ -338,7 +338,7 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
                     ToggleButtons(
@@ -360,7 +360,7 @@ class _Play2FaceViewState extends State<Play2FaceView> with AutomaticKeepAliveCl
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
                     ToggleButtons(

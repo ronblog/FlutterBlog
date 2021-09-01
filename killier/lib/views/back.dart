@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'playmodel.dart';
-import 'moveitem.dart';
+
+import '../playmodel.dart';
 
 class PlayNormalView extends StatefulWidget {
   @override

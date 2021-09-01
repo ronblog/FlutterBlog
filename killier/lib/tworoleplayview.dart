@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'playmodel.dart';
-import 'moveitem.dart';
+import 'widgets/moveitem.dart';
 
 import 'dart:async';
-import 'nonomoveitem.dart';
-import 'towrolepainter.dart';
+import 'widgets/nonomoveitem.dart';
+import 'painter/towrolepainter.dart';
 
 import 'package:flutter_tts/flutter_tts.dart';
 enum TtsState { playing, stopped, paused, continued }
@@ -195,7 +195,7 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
 
@@ -218,7 +218,7 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
                     ToggleButtons(
@@ -240,7 +240,7 @@ class _TwoRolePlayViewState extends State<TwoRolePlayView> { //with AutomaticKee
                     ),
                     Container(
                       width: 1,
-                      height: double.maxFinite,
+                      height: 30.0,
                       color: Colors.grey,
                     ),
                     ToggleButtons(
