@@ -4,7 +4,7 @@ import 'playmodel.dart';
 import 'tworoleplayview.dart';
 import 'setting2.dart';
 import 'playview2face.dart';
-
+import 'tts_sentence.dart';
 
 import 'package:provider/provider.dart';
 import 'playview_tradition.dart';
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 4,
+        length: 5,
         child: Scaffold(
           appBar: AppBar(
             bottom:  TabBar(
@@ -116,6 +116,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.storage),
                   text: '设置',
                 ),
+                Tab(
+                  icon: Icon(Icons.storage),
+                  text: '语音',
+                ),
               ],
             ),
             title: const Text('我要杀人'),
@@ -123,34 +127,57 @@ class _MyHomePageState extends State<MyHomePage> {
           body:  TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
-              //PlayNormalView(),
               TraditionView(),
-              //MyTTS(),
               Play2FaceView(),
               TwoRolePlayView(),
               SettingView2(),
-              //MyTTS(),
-              // Draggable(
-              //   child: buildBox("+1", Colors.red[200]!),
-              //   feedback: buildBox("+1", Colors.red[200]!),
-              //   childWhenDragging: buildBox("+1", Colors.grey[300]!),
-              //   data: 1,
-              //   onDragStarted: (){
-              //     print("onDragStarted");
-              //   },
-              //   onDragCompleted: (){
-              //     print("onDragCompleted");
-              //   },
-              //   onDragEnd: (details){
-              //     print("onDragEnd Accept = "+details.wasAccepted.toString());
-              //     print("onDragEnd Velocity = "+details.velocity.pixelsPerSecond.distance.toString());
-              //     print("onDragEnd Offeset= "+details.offset.direction.toString());
-              //   },
-              //   onDraggableCanceled: (Velocity velocity, Offset offset){
-              //     print("onDraggableCanceled "+velocity.toString());
-              //   },
-              // ),
+              TTSSentence()
             ],
+          ),
+          drawer: Drawer(
+            // Add a ListView to the drawer. This ensures the user can scroll
+            // through the options in the drawer if there isn't enough vertical
+            // space to fit everything.
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text('Drawer Header'),
+                ),
+                ListTile(
+                  title: Container(child: Row(
+                    children: [
+                    Text("ddd", ),
+
+                    TextField(
+                    enabled: true,
+                    decoration: InputDecoration(
+                      hintText: 'Enter a text',
+                    ),),
+                    ]
+                  ),),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Item 2'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

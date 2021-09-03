@@ -32,6 +32,7 @@ class _SettingViewState2 extends State<SettingView2>
   String cRole5 = "";
   String cRole6 = "";
 
+
   @override
   initState() {
     super.initState();

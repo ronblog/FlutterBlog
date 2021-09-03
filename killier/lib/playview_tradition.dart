@@ -278,7 +278,7 @@ class _TraditionViewState extends State<TraditionView> with AutomaticKeepAliveCl
                       onPressed: () async { print("message");
                       //-----------------------
                       await flutterTts.awaitSpeakCompletion(true);
-                      await flutterTts.speak("天黑请闭眼。");
+                      await flutterTts.speak("天黑请闭眼");
                         //------------------------------
                       },
                     ),
